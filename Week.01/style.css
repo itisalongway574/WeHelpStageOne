@@ -191,7 +191,7 @@ button {
         top: 0;
         right: 0;
         height: 100%;
-        border: 1px solid black;
+        /* border: 1px solid black; */
         background: white;
         box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
     }

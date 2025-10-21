@@ -105,8 +105,11 @@ function func2(ss, start, end, criteria) {
 
         // 檢查這個服務的所有已預約紀錄
         for (const existingBooking of bookings[checkingService.name]) {
+            const existStart = existingBooking.start;
+            const existEnd = existingBooking.end;
+
             // 檢查時間是否重疊，如果重疊了就標記為不可用，並跳出內層迴圈
-            if (start < existingBooking.end && end > existingBooking.start) {
+            if (start < existEnd && end > existStart) {
                 isTimeAvailable = false;
                 break;
             }
@@ -118,24 +121,16 @@ function func2(ss, start, end, criteria) {
         }
     }
 
-    // console.log(availableServices);
-
     if (availableServices.length === 0) {
         console.log("Sorry");
         return;
     }
 
-    // console.log(availableServices);
-
-    // 第二步：遞迴檢查候選名單中的service是否符合條件
-    // 傳入的條件格式為「判斷元素」＋「運算符號」＋「判斷基準」
-    // 判斷元素只有三種可能，r, c, name
-    // 運算符有幾種可能，<, >, <=, >=, =, !=
-    // 判斷基準可以為數字或字串，如果是r,c，那就會是數字；如果是name，那就會是S1,S2,S3其中之一
-
+    // 第二步：從AvailableServices中找出符合條件的服務
+    // 將原本傳入的條件解構成「判斷元素」、「運算符」、「判斷基準」
     let compareType = "";
     let compareOperator = "";
-    let compareValue = "";
+    let compareValue;
 
     //取出運算符，分離出判斷元素和判斷基準
     if (criteria.includes(">=")) {
@@ -146,95 +141,92 @@ function func2(ss, start, end, criteria) {
         compareOperator = "=";
     }
 
+    // 以運算符為界線，拆分出「判斷元素」和「判斷基準」
     let compareTypeAndValue = criteria.split(compareOperator);
-    // console.log(compareTypeAndValue);
     compareType = compareTypeAndValue[0];
-    compareValue = compareTypeAndValue[1];
+    // 因為拆解出來的「判斷基準」可能是字串，所以需要先轉換成數字
+    let valueStr = compareTypeAndValue[1];
 
-    //如果compareType是name，直接比對符合的service是否存在於前面的availableServices中
+    // 如果判斷元素是name，則去除前後的雙引號
     if (compareType === "name") {
-        availableServices = availableServices.filter(service => service.name === compareValue);
-        // 如果有符合就會print出符合的名字
-        if (availableServices.length > 0) {
-            console.log(availableServices[0].name);
-            bookings[availableServices[0].name].push({
+        compareValue = valueStr.replace(/"/g, '');
+    } else {
+        // 如果判斷元素是r或c，則轉換成數字
+        compareValue = parseFloat(valueStr);
+    }
+
+
+    // 如果判斷元素是name，則直接在availableServices中找出符合條件的服務
+    if (compareType === "name") {
+        const matchService = availableServices.find(service => service.name === compareValue);
+
+        if (matchService) {
+            console.log(matchService.name);
+            // 第三步：將最符合service的bookings紀錄中添加本次預約紀錄 
+            bookings[matchService.name].push({
                 start: start,
                 end: end
             });
-            console.log(bookings);
         } else {
+            // 時間可用，但條件不符
             console.log("Sorry");
         }
+        return;
     }
-    else {
-        //如果compareType是r或c，要找出運算符條件的service中，數值差距最小的那一個
 
-        //根據運算符的種類建立對應的比較函數
+    // 如果判斷元素是r或c，則在availableServices中找出符合條件的服務後，找出最接近的那一個
+    else {
+        // 根據運算符的種類建立對應的比較函數 (只處理 >= 和 <=)
         let compareFunction = (a, b) => {
             if (compareOperator === ">=") {
                 return a >= b;
             } else if (compareOperator === "<=") {
                 return a <= b;
-            } else {
-                return a == b;
             }
+            return false;
         };
 
-        //判斷AvailableServices中有哪些符合運算符
-        let matchOperatorServices = availableServices.filter(service => {
-            if (compareType === "r") {
-                return compareFunction(service.r, compareValue);
-            } else if (compareType === "c") {
-                return compareFunction(service.c, compareValue);
-            }
+        // 篩選出符合運算符的服務
+        let matchService = availableServices.filter(service => {
+            const serviceValue = service[compareType];
+            return compareFunction(serviceValue, compareValue);
         });
 
-        // console.log(matchOperatorServices);
-
-        let calcValue = [];
-
-        //計算matchOperatorServices中每個service的r或c與compareValue的差值
-        for (const service of matchOperatorServices) {
-            if (compareType === "r") {
-                calcValue.push({
-                    name: service.name,
-                    value: Math.abs(service.r - compareValue)
-                });
-            } else if (compareType === "c") {
-                calcValue.push({
-                    name: service.name,
-                    value: Math.abs(service.c - compareValue)
-                });
-            }
-        }
-        // console.log(calcValue);
-
-        // 找出calcValue中最小的值
-        let minValue = Math.min(...calcValue.map(item => item.value));
-        let minValueName = calcValue.find(item => item.value === minValue).name;
-        console.log(minValueName);
-        if (minValueName) {
-            bookings[minValueName].push({
-                start: start,
-                end: end
-            });
-            console.log(bookings);
-        } else {
+        let bestMatch;
+        // 如果沒有合格服務，則印出 Sorry
+        if (matchService.length === 0) {
             console.log("Sorry");
+            return;
         }
-    }
+        // 如果只有一個符合，那就是配對結果
+        else if (matchService.length === 1) {
+            bestMatch = matchService[0];
+            console.log(bestMatch.name);
+            bookings[bestMatch.name].push({ start: start, end: end });
+            return;
 
-    // 第三步：將最符合service的bookings紀錄中添加本次預約紀錄 
-    // if (availableServices.length > 0) {
-    //     for (const service of availableServices) {
-    //         bookings[service.name].push({
-    //             start: start,
-    //             end: end
-    //         });
-    //     }
-    // }
-    // console.table({ compareType, compareOperator, compareValue });
-    // console.log(bookings);
+        }
+        // 如果有多個符合，用排序找出最接近的值
+        else {
+            matchService.sort((a, b) => {
+                //如果條件是>=，要找最小值
+                if (compareOperator === ">=") {
+                    return a[compareType] - b[compareType];
+                }
+                //如果條件是<=，要找最大值
+                else if (compareOperator === "<=") {
+                    return b[compareType] - a[compareType];
+                }
+            });
+
+            // 重新排序後的第一個就是最符合的結果
+            bestMatch = matchService[0];
+        }
+
+        // print出結果並更新bookings
+        console.log(bestMatch.name);
+        bookings[bestMatch.name].push({ start: start, end: end });
+    }
 }
 
 
@@ -256,6 +248,7 @@ const services = [
     }
 ];
 
+console.log("=====Task 2=====");
 func2(services, 15, 17, "c>=800"); // S3
 func2(services, 11, 13, "r<=4"); // S3
 func2(services, 10, 12, "name=S3"); // Sorry
@@ -263,3 +256,100 @@ func2(services, 15, 18, "r>=4.5"); // S1
 func2(services, 16, 18, "r>=4"); // Sorry
 func2(services, 13, 17, "name=S1"); // Sorry
 func2(services, 8, 9, "c<=1500"); // S2
+
+
+// ===============================================
+// Task 3
+// ===============================================
+
+
+function func3(index) {
+    // 觀察數列規律，每4個為一次循環
+    // 每次循環會是-2
+    // 第一個項目是-2，第二個項目是-3，第三個項目是+1，第四個項目是+2
+    let beginNumber = 25;
+    let targetNumber;
+    let quotient;
+
+
+    // index被4除時，餘數可能是0,1,2,3
+    // 分別列舉各種餘數情況
+    //如果餘數為0，就根據他經歷幾次循環去*-2
+    if (index / 4 === 0) {
+        quotient = index / 4;
+        targetNumber = beginNumber - quotient * 2;
+    }
+    //如果餘數為1，就是(循環*-2)-2
+    else if ((index - 1) % 4 === 0) {
+        quotient = (index - 1) / 4;
+        targetNumber = beginNumber - quotient * 2 - 2;
+    }
+    //如果餘數為2，就是(循環*-2)-2-3
+    else if ((index - 2) % 4 === 0) {
+        quotient = (index - 2) / 4;
+        targetNumber = beginNumber - quotient * 2 - 5;
+    }
+    //如果餘數為3，就是(循環*-2)-2-3+1
+    else if ((index - 3) % 4 === 0) {
+        quotient = (index - 3) / 4;
+        targetNumber = beginNumber - quotient * 2 - 4;
+    }
+
+    console.log("print " + targetNumber);
+
+}
+
+console.log("=====Task 3=====");
+func3(1); // print 23
+func3(5); // print 21
+func3(10); // print 16
+func3(30); // print 6
+
+// ===============================================
+// Task 4
+// ===============================================
+
+
+
+function func4(sp, stat, n) {
+
+    //將stat拆分成單獨的數字
+    let statArray = stat.split("");
+    // console.log(statArray);
+
+    //建立一個陣列紀錄傳入的sp和對應的stat和原始Index
+    let spAndStatAndOrginalInex = [];
+    for (let i = 0; i < sp.length; i++) {
+        spAndStatAndOrginalInex.push({
+            originalIndex: i,
+            sp: sp[i],
+            stat: statArray[i],
+        });
+    }
+    // console.log(spAndStatAndOrginalInex);
+
+    //將stat是1的情況直接排除
+    spAndStatAndOrginalInex = spAndStatAndOrginalInex.filter(item => item.stat !== "1");
+    // console.log(spAndStatAndOrginalInex);
+
+    //找出SpAndStatAndOrginalInex中，sp>=n的項目
+    let matchSp = spAndStatAndOrginalInex.filter(item => item.sp >= n);
+    // console.log(matchSp);
+
+    //如果matchSp的長度為0，那就回頭找出spAndStatAndOrginalInex中最大的值對應的OriginalIndex
+    if (matchSp.length === 0) {
+        let maxSp = Math.max(...spAndStatAndOrginalInex.map(item => item.sp));
+        let maxSpIndex = spAndStatAndOrginalInex.findIndex(item => item.sp === maxSp);
+        console.log("print " + spAndStatAndOrginalInex[maxSpIndex].originalIndex);
+    }
+    //如果matchSp的長度為1，那就回頭找出spAndStatAndOrginalInex中最小的值對應的OriginalIndex
+    else {
+        let minSp = Math.min(...matchSp.map(item => item.sp));
+        let minSpIndex = matchSp.findIndex(item => item.sp === minSp);
+        console.log("print " + matchSp[minSpIndex].originalIndex);
+    }
+}
+console.log("=====Task 4=====");
+func4([3, 1, 5, 4, 3, 2], "101000", 2); //print 5
+func4([1, 0, 5, 1, 3], "10100", 4); //print 4
+func4([4, 6, 5, 8], "1000", 4); //print 2

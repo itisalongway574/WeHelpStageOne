@@ -69,7 +69,6 @@ function func1(name) {
     const resultMinDistance = matchMinDistance.join("、");
     const resultMaxDistance = matchMaxDistance.join("、");
 
-    // 題目要求的輸出格式有些微不同
     console.log(`print 最遠${resultMaxDistance}；最近${resultMinDistance}`);
 }
 
@@ -94,6 +93,7 @@ let bookings =
 
 // 根據指定的預約時間，去和已經安排的時間做比對
 function func2(ss, start, end, criteria) {
+
     // 第一步：確認是否有可以被預約的時段
     // 比對方式：新的預約要在S1-S3的所有既有的預約開始之前結束，或是在既有的預約結束之後開始
 
@@ -108,7 +108,7 @@ function func2(ss, start, end, criteria) {
             const existStart = existingBooking.start;
             const existEnd = existingBooking.end;
 
-            // 檢查時間是否重疊，如果重疊了就標記為不可用，並跳出內層迴圈
+            // 檢查時間是否重疊，如果重疊了就標記為不可用，然後就中斷迴圈
             if (start < existEnd && end > existStart) {
                 isTimeAvailable = false;
                 break;
@@ -275,9 +275,9 @@ function func3(index) {
     // index被4除時，餘數可能是0,1,2,3
     // 分別列舉各種餘數情況
     //如果餘數為0，就根據他經歷幾次循環去*-2
-    if (index / 4 === 0) {
+    if (index % 4 === 0) {
         quotient = index / 4;
-        targetNumber = beginNumber - quotient * 2;
+        targetNumber = beginNumber - quotient * 2 - 2;
     }
     //如果餘數為1，就是(循環*-2)-2
     else if ((index - 1) % 4 === 0) {
@@ -336,13 +336,15 @@ function func4(sp, stat, n) {
     let matchSp = spAndStatAndOrginalInex.filter(item => item.sp >= n);
     // console.log(matchSp);
 
-    //如果matchSp的長度為0，那就回頭找出spAndStatAndOrginalInex中最大的值對應的OriginalIndex
+    //如果matchSp的長度為0，代表沒有足夠的座位
     if (matchSp.length === 0) {
+        //找出spAndStatAndOrginalInex中最大的sp值
         let maxSp = Math.max(...spAndStatAndOrginalInex.map(item => item.sp));
+        //找出spAndStatAndOrginalInex中最大的sp值所對應的OriginalIndex
         let maxSpIndex = spAndStatAndOrginalInex.findIndex(item => item.sp === maxSp);
         console.log("print " + spAndStatAndOrginalInex[maxSpIndex].originalIndex);
     }
-    //如果matchSp的長度為1，那就回頭找出spAndStatAndOrginalInex中最小的值對應的OriginalIndex
+    //如果matchSp的長度為1，代表matchSp中的sp值都>=n，那就找出最小值即為最符合的
     else {
         let minSp = Math.min(...matchSp.map(item => item.sp));
         let minSpIndex = matchSp.findIndex(item => item.sp === minSp);

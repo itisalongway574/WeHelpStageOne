@@ -14,7 +14,7 @@ with request.urlopen(url_eng) as response:
 
 # 轉換成json
 data_ch = json.loads(data_string_ch)
-data_eng = json.loads(data_string_eng)
+data_eng = json.loads(data_string_eng)  
 
 # 單獨抽出裡面的list
 list_ch = data_ch['list']
@@ -76,7 +76,7 @@ districts_names = [item['district'] for item in districts_result]
 
 # 比對每一間飯店
 for hotel in hotels_result:
-    # 將選出來的飯店，去比對每一個行政區，並建立index方便對照
+    # 將選出來的飯店，去比對每一個行政區
     for index, district_data in enumerate(districts_result):
         district_name = district_data['district']
         

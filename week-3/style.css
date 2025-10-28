@@ -58,54 +58,20 @@ button {
     line-height: 1.25;
 }
 
-.cards_container {
+.main_container {
+    margin: 30px auto;
     width: 100%;
     max-width: 1200px;
-    /* background-color: black; */
-    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.promotions_container {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 50px 50px 200px 200px;
+    grid-template-rows: 50px 50px;
     gap: 20px;
-    /* margin-top: 30px; */
-}
-
-.card {
-    background-color: #cfedfd;
-    background-image: url('assets/img.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-}
-
-.card-star {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    opacity: 0.8;
-}
-
-.card-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.card_text-block {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    background-color: rgba(225, 249, 219, 0.575);
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* color: white; */
-    /* font-size: 1.5rem; */
 }
 
 .promotion {
@@ -136,25 +102,84 @@ button {
     grid-column: 4 / 6;
 }
 
+
+.cards_container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 200px 200px;
+    gap: 20px;
+    /* margin-top: 30px; */
+}
+
+.card {
+    background-color: #cfedfd;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.card-star {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0.8;
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+}
+
+.card_text-block {
+    position: absolute;
+    padding: 0.25rem 0.5rem;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: rgba(244, 244, 244, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card_text-block p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 @media (max-width: 1199px) {
+
+    .promotions_container {
+        width: 90%;
+        grid-template-columns: 1fr 1fr;
+    }
+
     .cards_container {
         width: 90%;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-rows: 50px 50px 200px 200px 200px;
+        grid-template-rows: 200px 200px 200px;
     }
 
     .promotion-1 {
-        grid-column: 1 / 3;
+        grid-column: 1 / 2;
     }
 
     .promotion-2 {
         grid-row: 1 / 2;
-        grid-column: 3 / 5;
+        grid-column: 2 / 3;
     }
 
     .promotion-3 {
         grid-row: 2 / 3;
-        grid-column: 1 / 5;
+        grid-column: 1 / 3;
     }
 
     .card-9 {
@@ -167,6 +192,14 @@ button {
 }
 
 @media (max-width: 599px) {
+
+    .promotions_container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+
     .cards_container {
         width: 90%;
         display: flex;

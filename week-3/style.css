@@ -120,10 +120,9 @@ button {
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 200px 200px;
     gap: 20px;
-    /* margin-top: 30px; */
 }
 
-.cards_container.isSingleRow {
+.cards_container.is-under-6 {
     grid-template-rows: 200px;
 }
 
@@ -177,15 +176,21 @@ button {
 
 @media (max-width: 1199px) {
 
-    .promotions_container {
+    .main_container {
         width: 90%;
+    }
+
+    .promotions_container {
         grid-template-columns: 1fr 1fr;
     }
 
     .cards_container {
-        width: 90%;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-rows: 200px 200px 200px;
+    }
+
+    .cards_container.is-under-9 {
+        grid-template-rows: 200px 200px;
     }
 
     .promotion-1 {
@@ -219,12 +224,13 @@ button {
         gap: 20px;
     }
 
-
     .cards_container {
-        width: 90%;
-        display: flex;
         flex-direction: column;
         gap: 20px;
+    }
+
+    .cards_container.is-visible {
+        display: flex;
     }
 
     .card {

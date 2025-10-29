@@ -148,7 +148,9 @@ function renderDOM(mergedAttractions) {
     // 檢查最後一個cards_containers是否只需要1列
     const lastCardsContainer = document.querySelector('.cards_container:last-child');
     if (lastCardsContainer.children.length < 6) {
-        lastCardsContainer.classList.add('isSingleRow');
+        lastCardsContainer.classList.add('is-under-6', 'is-under-9');
+    } else if (lastCardsContainer.children.length < 9) {
+        lastCardsContainer.classList.add('is-under-9');
     }
 
     // 將cardsContainerNum賦值給maxIndex以利外部使用

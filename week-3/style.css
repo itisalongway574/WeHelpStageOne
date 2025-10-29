@@ -71,12 +71,18 @@ button {
 
 .btn_load-more {
     position: absolute;
-    bottom: 0rem;
+    bottom: 1rem;
     left: 50%;
     transform: translateX(-50%);
     width: auto;
     padding: 0.5rem 1rem;
     background-color: #F1F1F1;
+    transition: transform 0.3s ease-out, background-color 0.3s ease-out;
+}
+
+.btn_load-more:hover {
+    background-color: #E1E1E1;
+    transform: translateY(-10%) translateX(-50%) scale(1.05);
 }
 
 .promotions_container {
@@ -93,6 +99,9 @@ button {
     justify-content: start;
     align-items: center;
     gap: 0.5rem;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: displayCard 0.3s ease-out forwards;
 }
 
 .promotion-img {
@@ -102,16 +111,19 @@ button {
 
 .promotion-1 {
     grid-column: 1 / 6;
+    animation-delay: 0s;
 }
 
 .promotion-2 {
     grid-row: 2 / 3;
     grid-column: 1 / 4;
+    animation-delay: 0.05s;
 }
 
 .promotion-3 {
     grid-row: 2 / 3;
     grid-column: 4 / 6;
+    animation-delay: 0.1s;
 }
 
 
@@ -128,6 +140,65 @@ button {
 
 .cards_container.is-visible {
     display: grid;
+}
+
+.cards_container.is-visible .card {
+    opacity: 0;
+    transform: translateY(50%);
+    animation: displayCard 0.3s ease-out forwards;
+}
+
+.cards_container.is-visible .card:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.cards_container.is-visible .card:nth-child(2) {
+    animation-delay: 0.05s;
+}
+
+.cards_container.is-visible .card:nth-child(3) {
+    animation-delay: 0.1s;
+}
+
+.cards_container.is-visible .card:nth-child(4) {
+    animation-delay: 0.15s;
+}
+
+.cards_container.is-visible .card:nth-child(5) {
+    animation-delay: 0.2s;
+}
+
+.cards_container.is-visible .card:nth-child(6) {
+    animation-delay: 0.25s;
+}
+
+.cards_container.is-visible .card:nth-child(7) {
+    animation-delay: 0.3s;
+}
+
+.cards_container.is-visible .card:nth-child(8) {
+    animation-delay: 0.35s;
+}
+
+.cards_container.is-visible .card:nth-child(9) {
+    animation-delay: 0.4s;
+}
+
+.cards_container.is-visible .card:nth-child(10) {
+    animation-delay: 0.45s;
+}
+
+@keyframes displayCard {
+
+    0% {
+        opacity: 0;
+        transform: translateY(50%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
 }
 
 .card {

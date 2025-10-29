@@ -1,17 +1,3 @@
-window.addEventListener('DOMContentLoaded', () => {
-    const navIconMenu = document.querySelector('.nav_icon-menu');
-    const navIconClose = document.querySelector('.nav_icon-close');
-    const navMenu = document.querySelector('.nav_menu');
-
-    navIconMenu.addEventListener('click', () => {
-        navMenu.classList.add('is-open');
-    });
-
-    navIconClose.addEventListener('click', () => {
-        navMenu.classList.remove('is-open');
-    });
-});
-
 const url_1 = 'https://cwpeng.github.io/test/assignment-3-1'
 const url_2 = 'https://cwpeng.github.io/test/assignment-3-2'
 
@@ -64,15 +50,15 @@ function mergeAttractionsData(attractions_info, attractions_pics) {
             }
         }
     })
-    console.log(mergedAttractions);
+    // console.log(mergedAttractions);
     return mergedAttractions;
 }
 
+// 處理DOM物件
 function renderDOM(mergedAttractions) {
-    const first3attractions = mergedAttractions.slice(0, 3);
-    // console.log(first3attractions);
-    const otherAttractions = mergedAttractions.splice(3);
-    // console.log(otherAttractions);
+    const first3attractions = mergedAttractions.splice(0, 3);
+    console.log(first3attractions);
+    console.log(mergedAttractions);
 
     const promotionsContainer = document.querySelector('.promotions_container');
     const mainContainer = document.querySelector('.main_container');
@@ -95,40 +81,70 @@ function renderDOM(mergedAttractions) {
         promotionsContainer.appendChild(promotionDiv);
     })
 
+
+    console.log(mergedAttractions.length);
+    // 先算出會渲染出幾組cards_container
+    const cardsContainerNum = Math.ceil(mergedAttractions.length / 10);
+    // console.log(cardsContainerNum);
+
+    // 建立一個function用於渲染cards_container
+    function renderCardsContainer(current10attractions, index) {
+        // 建立cards_container
+        const cardsContainer = document.createElement('section');
+        cardsContainer.classList.add('cards_container', 'cards_container-' + (index + 1));
+
+        // 建立cards_container內的卡片
+        current10attractions.forEach((atttraction, index) => {
+
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            cardDiv.classList.add('card-' + (index + 1));
+
+            const cardImg = document.createElement('img');
+            cardImg.src = atttraction.pics;
+            cardImg.classList.add('card-img');
+            cardImg.alt = atttraction.name;
+            cardDiv.appendChild(cardImg);
+
+            const cardStar = document.createElement('img');
+            cardStar.src = 'assets/star.svg';
+            cardStar.classList.add('card-star');
+            cardStar.alt = 'star';
+            cardDiv.appendChild(cardStar);
+
+            const cardTextBlock = document.createElement('div');
+            cardTextBlock.classList.add('card_text-block');
+            const cardText = document.createElement('p');
+            cardText.textContent = atttraction.name;
+            cardTextBlock.appendChild(cardText);
+            cardDiv.appendChild(cardTextBlock);
+            cardsContainer.appendChild(cardDiv);
+        })
+        mainContainer.appendChild(cardsContainer);
+    }
+
     // 每10個attractions渲染一個cards_container
-    // 先判斷otherAttractions的長度是否大於10
-    const cardContainer = document.createElement('section');
-    cardContainer.classList.add('cards_container');
+    for (let i = 0; i < cardsContainerNum; i++) {
+        const current10attractions = mergedAttractions.splice(0, 10);
+        renderCardsContainer(current10attractions, i);
+    }
 
-    otherAttractions.forEach((atttraction, index) => {
-
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('card');
-        cardDiv.classList.add('card-' + (index + 1));
-
-        const cardImg = document.createElement('img');
-        cardImg.src = atttraction.pics;
-        cardImg.classList.add('card-img');
-        cardImg.alt = atttraction.name;
-        cardDiv.appendChild(cardImg);
-
-        const cardStar = document.createElement('img');
-        cardStar.src = 'assets/star.svg';
-        cardStar.classList.add('card-star');
-        cardStar.alt = 'star';
-        cardDiv.appendChild(cardStar);
-
-        const cardTextBlock = document.createElement('div');
-        cardTextBlock.classList.add('card_text-block');
-        const cardText = document.createElement('p');
-        cardText.textContent = atttraction.name;
-        cardTextBlock.appendChild(cardText);
-        cardDiv.appendChild(cardTextBlock);
-        cardContainer.appendChild(cardDiv);
-        mainContainer.appendChild(cardContainer);
-    })
+    // 將cardsContainerNum賦值給maxIndex以利外部使用
+    maxIndex = cardsContainerNum;
 }
 
+let maxIndex = 0;
+let currentIndex = 0;
+
+function displayCardsContainer() {
+    const allCardsContainers = document.querySelectorAll('.cards_container');
+    for (let i = 0; i < currentIndex; i++) {
+        const displayCardsContainer = allCardsContainers[i];
+        if (displayCardsContainer) {
+            displayCardsContainer.classList.add('is-visible');
+        }
+    }
+}
 
 fetchAttractionsData().
     then(data => {
@@ -136,4 +152,35 @@ fetchAttractionsData().
     })
     .then(mergedAttractions => {
         renderDOM(mergedAttractions);
+        loadMore();
     });
+
+const btnLoadMore = document.querySelector('.btn_load-more');
+btnLoadMore.addEventListener('click', () => {
+    loadMore();
+});
+
+function loadMore() {
+    currentIndex++;
+    displayCardsContainer();
+    if (currentIndex === maxIndex) {
+        btnLoadMore.style.display = 'none';
+    } else {
+        return;
+    }
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+    const navIconMenu = document.querySelector('.nav_icon-menu');
+    const navIconClose = document.querySelector('.nav_icon-close');
+    const navMenu = document.querySelector('.nav_menu');
+
+    navIconMenu.addEventListener('click', () => {
+        navMenu.classList.add('is-open');
+    });
+
+    navIconClose.addEventListener('click', () => {
+        navMenu.classList.remove('is-open');
+    });
+});

@@ -70,7 +70,7 @@ function mergeAttractionsData(attractions_info, attractions_pics) {
     return mergedAttractions;
 }
 
-// 渲染DOM物件
+// 渲染所有attractions的DOM
 function renderDOM(mergedAttractions) {
     const first3attractions = mergedAttractions.splice(0, 3);
     // console.log(first3attractions);
@@ -145,8 +145,15 @@ function renderDOM(mergedAttractions) {
         renderCardsContainer(current10attractions, i);
     }
 
+    // 檢查最後一個cards_containers是否只需要1列
+    const lastCardsContainer = document.querySelector('.cards_container:last-child');
+    if (lastCardsContainer.children.length < 6) {
+        lastCardsContainer.classList.add('isSingleRow');
+    }
+
     // 將cardsContainerNum賦值給maxIndex以利外部使用
     maxIndex = cardsContainerNum;
+
 }
 
 // 顯示cards_container
@@ -154,9 +161,7 @@ function displayCardsContainer() {
     const allCardsContainers = document.querySelectorAll('.cards_container');
     for (let i = 0; i < currentIndex; i++) {
         const displayCardsContainer = allCardsContainers[i];
-        if (displayCardsContainer) {
-            displayCardsContainer.classList.add('is-visible');
-        }
+        displayCardsContainer.classList.add('is-visible');
     }
 }
 

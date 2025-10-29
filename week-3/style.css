@@ -123,6 +123,10 @@ button {
     /* margin-top: 30px; */
 }
 
+.cards_container.isSingleRow {
+    grid-template-rows: 200px;
+}
+
 .cards_container.is-visible {
     display: grid;
 }

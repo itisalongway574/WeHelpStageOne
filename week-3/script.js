@@ -1,12 +1,20 @@
 const url_1 = 'https://cwpeng.github.io/test/assignment-3-1'
 const url_2 = 'https://cwpeng.github.io/test/assignment-3-2'
 
+// 全局狀態管理 (保持與原程式碼相容)
+let maxIndex = 0;
+let currentIndex = 0;
 
+// Task 3: 資料擷取 (保持原函數名稱，內部使用 await)
 async function fetchAttractionsData() {
     try {
-        const response_1 = await fetch(url_1);
-        const response_2 = await fetch(url_2);
+        // 使用 await 等待兩個 fetch 請求完成
+        const [response_1, response_2] = await Promise.all([
+            fetch(url_1),
+            fetch(url_2)
+        ]);
 
+        // 使用 await 等待 JSON 解析完成
         const data_url_1 = await response_1.json();
         const data_url_2 = await response_2.json();
 
@@ -16,10 +24,13 @@ async function fetchAttractionsData() {
         }
     }
     catch (error) {
+        // 捕獲 fetch 或 JSON 解析錯誤
         console.error('Error fetching attractions data:', error);
+        throw error; // 向上層拋出錯誤，讓 main() 的 catch 處理
     }
 }
 
+// 資料合併邏輯 (保持不變)
 function mergeAttractionsData(attractions_info, attractions_pics) {
 
     // map出attractions_pics的serial和pics
@@ -35,8 +46,13 @@ function mergeAttractionsData(attractions_info, attractions_pics) {
         if (matchedSerial) {
             const rawPics = matchedSerial;
             const splitBase = '.jpg';
-            const cleanPics = rawPics.split(splitBase);
-            const picsUrl = 'https://www.travel.taipei/' + cleanPics[0] + '.jpg';
+            // 注意：這裡沿用您原有的 split/slice 邏輯，但在實際應用中，需要確保取到的是正確的圖片 URL
+            const firstPicUrl = rawPics.split(splitBase)[0];
+            const picsUrl = 'https://www.travel.taipei/' + firstPicUrl + '.jpg';
+
+            // const splitBase = '.jpg';
+            // const cleanPics = rawPics.split(splitBase);
+            // const picsUrl = 'https://www.travel.taipei/' + cleanPics[0] + '.jpg';
             // console.log(picsUrl);
 
             return {
@@ -54,11 +70,11 @@ function mergeAttractionsData(attractions_info, attractions_pics) {
     return mergedAttractions;
 }
 
-// 處理DOM物件
+// 渲染DOM物件
 function renderDOM(mergedAttractions) {
     const first3attractions = mergedAttractions.splice(0, 3);
-    console.log(first3attractions);
-    console.log(mergedAttractions);
+    // console.log(first3attractions);
+    // console.log(mergedAttractions);
 
     const promotionsContainer = document.querySelector('.promotions_container');
     const mainContainer = document.querySelector('.main_container');
@@ -82,7 +98,7 @@ function renderDOM(mergedAttractions) {
     })
 
 
-    console.log(mergedAttractions.length);
+    // console.log(mergedAttractions.length);
     // 先算出會渲染出幾組cards_container
     const cardsContainerNum = Math.ceil(mergedAttractions.length / 10);
     // console.log(cardsContainerNum);
@@ -133,9 +149,7 @@ function renderDOM(mergedAttractions) {
     maxIndex = cardsContainerNum;
 }
 
-let maxIndex = 0;
-let currentIndex = 0;
-
+// 顯示cards_container
 function displayCardsContainer() {
     const allCardsContainers = document.querySelectorAll('.cards_container');
     for (let i = 0; i < currentIndex; i++) {
@@ -146,15 +160,7 @@ function displayCardsContainer() {
     }
 }
 
-fetchAttractionsData().
-    then(data => {
-        return mergeAttractionsData(data.attractions_info, data.attractions_pics);
-    })
-    .then(mergedAttractions => {
-        renderDOM(mergedAttractions);
-        loadMore();
-    });
-
+// 監聽點擊btn_load-more的事件
 const btnLoadMore = document.querySelector('.btn_load-more');
 btnLoadMore.addEventListener('click', () => {
     loadMore();
@@ -171,6 +177,27 @@ function loadMore() {
 }
 
 
+async function main() {
+    try {
+        // 取得url回傳的資料
+        const data = await fetchAttractionsData();
+
+        // 將資料合併成所需的格式
+        const mergedAttractions = mergeAttractionsData(data.attractions_info, data.attractions_pics);
+
+        // 根據mergedAttractions渲染DOM
+        renderDOM(mergedAttractions);
+
+        // 初始化
+        loadMore();
+
+    } catch (error) {
+        // 處理任何在 main 函數中發生的錯誤
+        console.error('出現錯誤', error);
+    }
+}
+
+
 window.addEventListener('DOMContentLoaded', () => {
     const navIconMenu = document.querySelector('.nav_icon-menu');
     const navIconClose = document.querySelector('.nav_icon-close');
@@ -183,4 +210,6 @@ window.addEventListener('DOMContentLoaded', () => {
     navIconClose.addEventListener('click', () => {
         navMenu.classList.remove('is-open');
     });
+
+    main();
 });

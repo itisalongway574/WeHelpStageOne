@@ -66,11 +66,12 @@ button {
     flex-direction: column;
     gap: 20px;
     position: relative;
+    padding-bottom: 5rem;
 }
 
 .btn_load-more {
     position: absolute;
-    bottom: -5rem;
+    bottom: 0rem;
     left: 50%;
     transform: translateX(-50%);
     width: auto;

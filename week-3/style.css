@@ -130,13 +130,14 @@ button {
 .cards_container {
     display: none;
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 200px 200px;
+    grid-auto-rows: 200px;
+    /* grid-template-rows: 200px 200px; */
     gap: 20px;
 }
 
-.cards_container.is-under-6 {
+/* .cards_container.is-under-6 {
     grid-template-rows: 200px;
-}
+} */
 
 .cards_container.is-visible {
     display: grid;
@@ -257,12 +258,12 @@ button {
 
     .cards_container {
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-rows: 200px 200px 200px;
+        /* grid-template-rows: 200px 200px 200px; */
     }
 
-    .cards_container.is-under-9 {
+    /* .cards_container.is-under-9 {
         grid-template-rows: 200px 200px;
-    }
+    } */
 
     .promotion-1 {
         grid-column: 1 / 2;

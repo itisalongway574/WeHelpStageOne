@@ -1,20 +1,19 @@
 const url_1 = 'https://cwpeng.github.io/test/assignment-3-1'
 const url_2 = 'https://cwpeng.github.io/test/assignment-3-2'
 
-// 全局狀態管理 (保持與原程式碼相容)
 let maxIndex = 0;
 let currentIndex = 0;
 
 // Task 3: 資料擷取 (保持原函數名稱，內部使用 await)
 async function fetchAttractionsData() {
     try {
-        // 使用 await 等待兩個 fetch 請求完成
+        // fetch url資料
         const [response_1, response_2] = await Promise.all([
             fetch(url_1),
             fetch(url_2)
         ]);
 
-        // 使用 await 等待 JSON 解析完成
+        // 解析JSON
         const data_url_1 = await response_1.json();
         const data_url_2 = await response_2.json();
 
@@ -24,9 +23,8 @@ async function fetchAttractionsData() {
         }
     }
     catch (error) {
-        // 捕獲 fetch 或 JSON 解析錯誤
         console.error('Error fetching attractions data:', error);
-        throw error; // 向上層拋出錯誤，讓 main() 的 catch 處理
+        throw error;
     }
 }
 
@@ -46,14 +44,9 @@ function mergeAttractionsData(attractions_info, attractions_pics) {
         if (matchedSerial) {
             const rawPics = matchedSerial;
             const splitBase = '.jpg';
-            // 注意：這裡沿用您原有的 split/slice 邏輯，但在實際應用中，需要確保取到的是正確的圖片 URL
             const firstPicUrl = rawPics.split(splitBase)[0];
             const picsUrl = 'https://www.travel.taipei/' + firstPicUrl + '.jpg';
 
-            // const splitBase = '.jpg';
-            // const cleanPics = rawPics.split(splitBase);
-            // const picsUrl = 'https://www.travel.taipei/' + cleanPics[0] + '.jpg';
-            // console.log(picsUrl);
 
             return {
                 name: info.sname,
@@ -144,14 +137,6 @@ function renderDOM(mergedAttractions) {
         const current10attractions = mergedAttractions.splice(0, 10);
         renderCardsContainer(current10attractions, i);
     }
-
-    // 檢查最後一個cards_containers是否只需要1列
-    // const lastCardsContainer = document.querySelector('.cards_container:last-child');
-    // if (lastCardsContainer.children.length < 6) {
-    //     lastCardsContainer.classList.add('is-under-6', 'is-under-9');
-    // } else if (lastCardsContainer.children.length < 9) {
-    //     lastCardsContainer.classList.add('is-under-9');
-    // }
 
     // 將cardsContainerNum賦值給maxIndex以利外部使用
     maxIndex = cardsContainerNum;

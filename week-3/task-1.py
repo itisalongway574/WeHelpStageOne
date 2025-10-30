@@ -1,7 +1,7 @@
 import urllib.request as request
 import json
 import csv
-import os
+# import os
 
 # 要抓取的網址
 url_ch = "https://resources-wehelp-taiwan-b986132eca78c0b5eeb736fc03240c2ff8b7116.gitlab.io/hotels-ch"

@@ -1,59 +1,44 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request
+from fastapi import Form
+from fastapi.responses import RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
-import mysql.connector
-from mysql.connector import pooling
-
-# --- Pydantic 模型 (根據投影片規格) ---
-class Message(BaseModel):
-    author: str
-    content: str
-
-# --- 資料庫連線池設定 ---
-db_config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "MySQL_wadejin1996", # 請替換成您自己的密碼
-    "database": "fastapi"
-}
-try:
-    connection_pool = pooling.MySQLConnectionPool(pool_name="my_pool", pool_size=5, **db_config)
-    print("資料庫連線池建立成功。")
-except Exception as e:
-    print(f"資料庫連線池建立失敗: {e}")
-    connection_pool = None
+from fastapi.templating import Jinja2Templates
+import uvicorn
 
 app = FastAPI()
 
-# --- API 路由 (根據投影片規格) ---
+# 設定stactic file路徑
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# 新增留言的API
-@app.post("/api/message")
-def create_message(message: Message):
-    if not connection_pool:
-        raise HTTPException(status_code=500, detail="資料庫連線失敗")
+# 設定templates路徑
+templates = Jinja2Templates(directory="templates")
 
-    con = None
-    cursor = None
-    try:
-        con = connection_pool.get_connection()
-        cursor = con.cursor()
-        cursor.execute(
-            "INSERT INTO message(author, content) VALUES (%s, %s)", 
-            (message.author, message.content)
-        )
-        con.commit()
-        return {"message": "留言新增成功"}
-    except Exception as e:
-        print(f"新增留言時發生錯誤: {e}")
-        if con:
-            con.rollback()
-        raise HTTPException(status_code=500, detail="伺服器內部錯誤，無法新增留言")
-    finally:
-        if cursor:
-            cursor.close()
-        if con and con.is_connected():
-            con.close()
 
-# --- 掛載靜態檔案 ---
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.post("/login")
+async def login(email: str = Form(), password: str = Form()):
+    if not email or not password:
+        return RedirectResponse(url="/ohoh?msg=請輸入信箱和密碼", status_code=303)
+    if email == "abc@abc.com" and password == "abc":
+        return RedirectResponse(url="/member", status_code=303)
+    else:
+        return RedirectResponse(url="/ohoh?msg=信箱或密碼不正確", status_code=303)
+
+
+@app.get("/member", response_class=HTMLResponse)
+async def member(request: Request):
+    return templates.TemplateResponse("member.html", {"request": request})
+
+
+@app.get("/ohoh", response_class=HTMLResponse)
+async def ohoh(request: Request, msg: str):
+    return templates.TemplateResponse("ohoh.html", {"request": request, "msg": msg})
+
+    # 設定伺服器的啟動路徑
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)

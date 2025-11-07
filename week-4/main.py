@@ -4,9 +4,15 @@ from fastapi.responses import RedirectResponse
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.sessions import SessionMiddleware
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="b9178e7811b6cb5238c6e7df291ca264"
+)
 
 # 設定stactic file路徑
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -21,18 +27,28 @@ async def home(request: Request):
 
 
 @app.post("/login")
-async def login(email: str = Form(), password: str = Form()):
+async def login(request: Request, email: str = Form(), password: str = Form()):
     if not email or not password:
         return RedirectResponse(url="/ohoh?msg=請輸入信箱和密碼", status_code=303)
     if email == "abc@abc.com" and password == "abc":
+        request.session["LOGGED_IN"] = True
         return RedirectResponse(url="/member", status_code=303)
     else:
-        return RedirectResponse(url="/ohoh?msg=信箱或密碼不正確", status_code=303)
+        return RedirectResponse(url="/ohoh?msg=信箱或密碼輸入錯誤", status_code=303)
 
 
 @app.get("/member", response_class=HTMLResponse)
 async def member(request: Request):
-    return templates.TemplateResponse("member.html", {"request": request})
+    if not request.session.get("LOGGED_IN"):
+        return RedirectResponse(url="/", status_code=303)
+    else:
+        return templates.TemplateResponse("member.html", {"request": request})
+
+
+@app.get("/logout")
+async def logout(request: Request):
+    request.session["LOGGED_IN"] = False
+    return RedirectResponse(url="/", status_code=303)
 
 
 @app.get("/ohoh", response_class=HTMLResponse)

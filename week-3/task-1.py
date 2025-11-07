@@ -14,7 +14,7 @@ with request.urlopen(url_eng) as response:
 
 # 轉換成json
 data_ch = json.loads(data_string_ch)
-data_eng = json.loads(data_string_eng)  
+data_eng = json.loads(data_string_eng)
 
 # 單獨抽出裡面的list
 list_ch = data_ch['list']
@@ -47,8 +47,9 @@ for i in range(len(ordered_list_ch)):
 # print(hotels_result[0])
 
 # 定義CSV欄位名稱
-hotels_csv_field=['chinese_name', 'english_name', 'chinese_address', 'english_address', 'phone', 'room_count']
-hotels_csv_name='hotels.csv'
+hotels_csv_field = ['chinese_name', 'english_name',
+                    'chinese_address', 'english_address', 'phone', 'room_count']
+hotels_csv_name = 'hotels.csv'
 
 # 產生CSV檔案
 with open(hotels_csv_name, 'w', newline='', encoding='utf-8') as csvfile:
@@ -57,18 +58,18 @@ with open(hotels_csv_name, 'w', newline='', encoding='utf-8') as csvfile:
 
 # 預先定義districts_result的結構
 districts_result = [
-    {'district': '大安區', 'hotel_count': 0,'room_count': 0},
-    {'district': '大同區', 'hotel_count': 0,'room_count': 0},
-    {'district': '中山區', 'hotel_count': 0,'room_count': 0},
-    {'district': '中正區', 'hotel_count': 0,'room_count': 0},
-    {'district': '萬華區', 'hotel_count': 0,'room_count': 0},
-    {'district': '信義區', 'hotel_count': 0,'room_count': 0},
-    {'district': '松山區', 'hotel_count': 0,'room_count': 0},
-    {'district': '士林區', 'hotel_count': 0,'room_count': 0},
-    {'district': '北投區', 'hotel_count': 0,'room_count': 0},
-    {'district': '內湖區', 'hotel_count': 0,'room_count': 0},
-    {'district': '南港區', 'hotel_count': 0,'room_count': 0},
-    {'district': '文山區', 'hotel_count': 0,'room_count': 0},
+    {'district': '大安區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '大同區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '中山區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '中正區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '萬華區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '信義區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '松山區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '士林區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '北投區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '內湖區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '南港區', 'hotel_count': 0, 'room_count': 0},
+    {'district': '文山區', 'hotel_count': 0, 'room_count': 0},
 ]
 
 # 建立一個行政區的列表用於比對
@@ -79,19 +80,19 @@ for hotel in hotels_result:
     # 將選出來的飯店，去比對每一個行政區
     for index, district_data in enumerate(districts_result):
         district_name = district_data['district']
-        
+
         # 如果地址中有比對的行政區名稱，就代表找到對應的行政區
         if district_name in hotel['chinese_address']:
             districts_result[index]['hotel_count'] += 1
             districts_result[index]['room_count'] += int(hotel['room_count'])
-            
+
             # 因為已經找到了，就不用繼續比對
             break
 
 # print(districts_result)
 
-districts_csv_field=['district', 'hotel_count', 'room_count']
-districts_csv_name='districts.csv'
+districts_csv_field = ['district', 'hotel_count', 'room_count']
+districts_csv_name = 'districts.csv'
 with open(districts_csv_name, 'w', newline='', encoding='utf-8') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=districts_csv_field)
     writer.writerows(districts_result)
@@ -114,8 +115,3 @@ with open(districts_csv_name, 'w', newline='', encoding='utf-8') as csvfile:
 # print(f"Total rooms: {total_rooms}")
 # print(f"Total hotels: {total_hotels_district}")
 # print(f"Total rooms: {total_rooms_district}")
-
-
-
-
-

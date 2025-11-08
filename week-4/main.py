@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 import uvicorn
-import urllib.request as request
+import urllib.request as url_request
 import json
 
 
@@ -14,9 +14,9 @@ import json
 url_ch = "https://resources-wehelp-taiwan-b986132eca78c0b5eeb736fc03240c2ff8b7116.gitlab.io/hotels-ch"
 url_eng = "https://resources-wehelp-taiwan-b986132eca78c0b5eeb736fc03240c2ff8b7116.gitlab.io/hotels-en"
 
-with request.urlopen(url_ch) as response:
+with url_request.urlopen(url_ch) as response:
     data_string_ch = response.read().decode("utf-8")
-with request.urlopen(url_eng) as response:
+with url_request.urlopen(url_eng) as response:
     data_string_eng = response.read().decode("utf-8")
 
 # 轉換成json

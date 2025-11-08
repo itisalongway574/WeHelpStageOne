@@ -3,6 +3,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('submit');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
+    const hotelID = document.getElementById('hotel');
+    const searchBtn = document.getElementById('search');
 
     // 選取錯誤訊息的span
     const emailError = emailInput.parentElement.querySelector('span');
@@ -45,6 +47,15 @@ window.addEventListener('DOMContentLoaded', () => {
             alert('請勾選同意條款');
         } else {
             return true;
+        }
+    });
+
+    searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isNaN(parseInt(hotelID.value)) || parseInt(hotelID.value) <= 0) {
+            alert('請輸入正整數');
+        } else {
+            window.location.href = `/hotel/${hotelID.value}`;
         }
     });
 });

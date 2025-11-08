@@ -10,16 +10,17 @@
 </head>
 
 <body>
-    <main class="bg-gray-50 w-full h-[100dvh] flex justify-center items-center">
+    <main class="bg-zinc-200 w-full min-h-[100dvh] flex flex-col justify-center items-center
+    border-[1px] border-zinc-400">
         <!-- 登入介面 -->
-        <div class="bg-white w-10/12 max-w-xl min-w-xs">
+        <div class="bg-white w-11/12 max-w-xl min-w-xs">
             <!-- 標題 -->
             <h3 class="text-xl text-white bg-slate-800 text-center px-4 py-2">
                 歡迎光臨，請輸入信箱密碼
             </h3>
             <!-- 表單 -->
             <form action="/login" method="post"
-                class="p-4 w-10/12 flex flex-col justify-center items-center gap-4 mx-auto">
+                class="py-4 px-8 max-w-sm flex flex-col justify-center items-center gap-4 mx-auto">
                 <h1 class="text-lg font-semibold text-center">登入系統</h1>
                 <div class="w-full flex justify-center items-start gap-2">
                     <label class="text-nowrap h-10 flex items-center" for="email">信箱</label>
@@ -46,6 +47,27 @@
                 <button
                     class="w-auto px-6 py-2 bg-slate-400 hover:bg-slate-600 transition-colors duration-300 text-white rounded-md"
                     type="submit" id="submit">登入</button>
+            </form>
+        </div>
+        <!-- 查詢介面 -->
+        <div class="bg-white w-11/12 max-w-xl min-w-xs py-4 border-t border-slate-200">
+            <!-- 標題 -->
+            <h3 class="text-lg font-semibold text-center ">
+                取得旅館資料
+            </h3>
+            <form method="get" class="py-4 px-8 max-w-sm flex flex-col justify-center items-center gap-4 mx-auto">
+                <div class="w-full flex justify-center items-start gap-2">
+                    <label class="text-nowrap h-10 flex items-center" for="hotel">編號</label>
+                    <div class="w-full">
+                        <input class="w-full p-2 border border-gray-300 rounded-md
+                                                        focus:outline-none focus:border-slate-500" type="text"
+                            id="hotel" name="hotel" placeholder="請輸入旅館編號">
+                        <span class="hidden text-red-500 text-sm">請輸入旅館編號</span>
+                    </div>
+                </div>
+                <button
+                    class="w-auto px-6 py-2 bg-slate-400 hover:bg-slate-600 transition-colors duration-300 text-white rounded-md"
+                    type="submit" id="search">查詢</button>
             </form>
         </div>
     </main>

@@ -68,13 +68,13 @@ SELECT * FROM member WHERE name LIKE '%es%';
 ```
 ![task-3-6](./screenshot/task-3-6.png)
 
-7.SELECT rows where email equals to test@test.com and password equals to test.
+#### 7.SELECT rows where email equals to test@test.com and password equals to test.
 ```sql
 SELECT * FROM member WHERE email = 'test@test.com' AND password = 'test';
 ```
 ![task-3-7](./screenshot/task-3-7.png)
 
-8.UPDATE data in name column to test2 where email equals to test@test.com.
+#### 8.UPDATE data in name column to test2 where email equals to test@test.com.
 ```sql
 UPDATE member SET name = 'test2' WHERE email = 'test@test.com';
 ```

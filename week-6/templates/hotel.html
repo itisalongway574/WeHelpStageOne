@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <title>旅館資訊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-zinc-200 min-h-screen flex justify-center items-center">
+    <div class="bg-white w-11/12 max-w-xl">
+        <h3 class="text-xl text-white bg-slate-800 text-center px-4 py-2">
+            旅館的資訊
+        </h3>
+        <div class="p-8 text-center">
+            {% if hotel %}
+            <!-- 如果有找到旅館，顯示資訊 -->
+            <p>{{ hotel.chinese_name }}、{{ hotel.english_name }}、{{ hotel.phone }}</p>
+            <a href="/" class="text-blue-600 underline">返回首頁</a>
+            {% else %}
+            <!-- 如果沒找到旅館 -->
+            <p>查詢不到相關資料</p>
+            <a href="/" class="text-blue-600 underline">返回首頁</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

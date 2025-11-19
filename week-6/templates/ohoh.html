@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>失敗頁面｜{{msg}}</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <main class="bg-gray-50 w-full h-[100dvh] flex justify-center items-center">
+        <!-- 登入介面 -->
+        <div class="bg-white w-8/12 max-w-xl min-w-xs border border-slate-100 flex flex-col pb-8">
+            <!-- 標題 -->
+            <h3 class="text-xl text-white bg-slate-800 text-center px-4 py-2">
+                失敗頁面
+            </h3>
+            <h5 class="text-center py-8">
+                {{msg}}
+            </h5>
+            <a href="/" class="text-slate-600 underline inline-block text-center mx-auto">返回首頁</a>
+        </div>
+    </main>
+</body>
+
+</html>

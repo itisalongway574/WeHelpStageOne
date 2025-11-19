@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeHelp第一階段Week-4作業｜登入頁面</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <main class="bg-zinc-200 w-full min-h-[100dvh] flex flex-col justify-center items-center
+    border-[1px] border-zinc-400">
+        <!-- 登入介面 -->
+        <div class="bg-white w-11/12 max-w-xl min-w-xs">
+            <!-- 標題 -->
+            <h3 class="text-xl text-white bg-slate-800 text-center px-4 py-2">
+                歡迎光臨，請輸入信箱密碼
+            </h3>
+            <!-- 表單 -->
+            <form action="/login" method="post"
+                class="py-4 px-8 max-w-sm flex flex-col justify-center items-center gap-4 mx-auto">
+                <h1 class="text-lg font-semibold text-center">登入系統</h1>
+                <div class="w-full flex justify-center items-start gap-2">
+                    <label class="text-nowrap h-10 flex items-center" for="email">信箱</label>
+                    <div class="w-full">
+                        <input class="w-full p-2 border border-gray-300 rounded-md
+                        focus:outline-none focus:border-slate-500" type="email" id="email" name="email"
+                            placeholder="請輸入信箱">
+                        <span class="hidden text-red-500 text-sm">信箱格式不正確</span>
+                    </div>
+                </div>
+                <div class="w-full flex justify-center items-center gap-2">
+                    <label class="text-nowrap h-10 flex items-center" for="email">密碼</label>
+                    <div class="w-full">
+                        <input class="w-full p-2 border border-gray-300 rounded-md
+                        focus:outline-none focus:border-slate-500" type="password" id="password" name="password"
+                            placeholder="請輸入密碼">
+                        <span class="hidden text-red-500 text-sm">請輸入密碼</span>
+                    </div>
+                </div>
+                <div class="w-full flex justify-center items-center gap-2">
+                    <label for="agree">同意條款</label>
+                    <input class="w-4 h-4" type="checkbox" id="agree" name="agree">
+                </div>
+                <button
+                    class="w-auto px-6 py-2 bg-slate-400 hover:bg-slate-600 transition-colors duration-300 text-white rounded-md"
+                    type="submit" id="submit">登入</button>
+            </form>
+        </div>
+        <!-- 查詢介面 -->
+        <div class="bg-white w-11/12 max-w-xl min-w-xs py-4 border-t border-slate-200">
+            <!-- 標題 -->
+            <h3 class="text-lg font-semibold text-center ">
+                取得旅館資料
+            </h3>
+            <form method="get" class="py-4 px-8 max-w-sm flex flex-col justify-center items-center gap-4 mx-auto">
+                <div class="w-full flex justify-center items-start gap-2">
+                    <label class="text-nowrap h-10 flex items-center" for="hotel">編號</label>
+                    <div class="w-full">
+                        <input class="w-full p-2 border border-gray-300 rounded-md
+                                                        focus:outline-none focus:border-slate-500" type="text"
+                            id="hotel" name="hotel" placeholder="請輸入旅館編號">
+                        <span class="hidden text-red-500 text-sm">請輸入旅館編號</span>
+                    </div>
+                </div>
+                <button
+                    class="w-auto px-6 py-2 bg-slate-400 hover:bg-slate-600 transition-colors duration-300 text-white rounded-md"
+                    type="submit" id="search">查詢</button>
+            </form>
+        </div>
+    </main>
+    <script src="../static/script.js"></script>
+</body>
+
+</html>

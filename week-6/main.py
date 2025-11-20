@@ -13,7 +13,7 @@ from config import DB_CONFIG
 
 
 # ================================
-# 設定MySQL資料庫
+# 連接MySQL資料庫
 # ================================
 def get_db_connection():
     connection = mysql.connector.connect(

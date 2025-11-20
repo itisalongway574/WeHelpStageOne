@@ -106,16 +106,18 @@ async def member(request: Request):
     cursor = conn.cursor(dictionary=True)
     # 查詢留言資料
     cursor.execute("""
-    SELECT message.id, message.content, message.time, member.name
+    SELECT message.id, message.content, message.time, member.name, message.member_id
     FROM message
     JOIN member ON message.member_id = member.id
-    ORDER BY message.time DESC 
+    ORDER BY message.time DESC
     """)
     member_messages = cursor.fetchall()
     cursor.close()
     conn.close()
     return templates.TemplateResponse("member.html", {
-        "request": request, "member_name": member_name, "member_messages": member_messages})
+        "request": request,
+        "member_name": member_name,
+        "member_messages": member_messages})
 
 
 @app.post("/createMessage")
@@ -126,6 +128,17 @@ async def createMessage(request: Request, content: str = Form()):
     cursor = conn.cursor(dictionary=True)
     cursor.execute("INSERT INTO message (member_id, content) VALUES (%s, %s)",
                    (request.session.get("member_id"), content))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return RedirectResponse(url="/member", status_code=303)
+
+
+@app.post("/deleteMessage")
+async def deleteMessage(request: Request, message_id: int = Form()):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM message WHERE id = %s", (message_id,))
     conn.commit()
     cursor.close()
     conn.close()

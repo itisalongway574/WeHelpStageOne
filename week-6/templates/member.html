@@ -46,10 +46,21 @@
             <div class="border-t border-slate-200 px-8 pt-8 pb-12
             flex flex-col items-start justify-center gap-4">
                 {% for member_message in member_messages %}
-                <p class="text-center px-4 py-2 rounded-md bg-slate-100">
-                    <span class="font-bold">{{member_message['name']}}：</span>
-                    {{member_message['content']}}
-                </p>
+                <div class="flex justify-start items-start gap-1">
+                    <p class="text-center px-4 py-2 rounded-md bg-slate-100">
+                        <span class="font-bold">{{member_message['name']}}：</span>
+                        {{member_message['content']}}
+                    </p>
+                    {% if member_message['member_id'] == request.session.get('member_id') %}
+                    <form action="/deleteMessage" method="post" onsubmit="return confirm('確定要刪除這則留言嗎？')" class="inline">
+                        <input type="hidden" name="message_id" value="{{member_message['id']}}">
+                        <button type="submit" class="w-4 h-4 p-1 bg-red-200 hover:bg-red-300 
+  transition-colors duration-300 rounded-sm">
+                            <img src="/static/x.svg" alt="刪除留言" class="w-full h-full">
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
                 {% endfor %}
             </div>
 

@@ -101,7 +101,35 @@ async def member(request: Request):
         return RedirectResponse(url="/", status_code=303)
     # 將會員名稱傳遞到template
     member_name = request.session.get("member_name")
-    return templates.TemplateResponse("member.html", {"request": request, "member_name": member_name})
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    # 查詢留言資料
+    cursor.execute("""
+    SELECT message.id, message.content, message.time, member.name
+    FROM message
+    JOIN member ON message.member_id = member.id
+    ORDER BY message.time DESC 
+    """)
+    member_messages = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return templates.TemplateResponse("member.html", {
+        "request": request, "member_name": member_name, "member_messages": member_messages})
+
+
+@app.post("/createMessage")
+async def createMessage(request: Request, content: str = Form()):
+    if not content:
+        return RedirectResponse(url="/ohoh?msg=請輸入留言", status_code=303)
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("INSERT INTO message (member_id, content) VALUES (%s, %s)",
+                   (request.session.get("member_id"), content))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return RedirectResponse(url="/member", status_code=303)
 
 
 @app.get("/logout")

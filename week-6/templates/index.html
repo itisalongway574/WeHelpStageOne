@@ -29,7 +29,8 @@
                         <div class="w-full">
                             <input class="w-full p-2 border border-gray-300 rounded-md
                             focus:outline-none focus:border-slate-500" type="text" id="signup_name" name="signup_name"
-                                placeholder="請輸入姓名">
+                                placeholder="請輸入姓名" required oninvalid="this.setCustomValidity('請輸入姓名')"
+                                oninput="this.setCustomValidity('')">
                             <span class="hidden text-red-500 text-sm">請輸入姓名</span>
                         </div>
                     </div>
@@ -38,7 +39,8 @@
                         <div class="w-full">
                             <input class="w-full p-2 border border-gray-300 rounded-md
                                     focus:outline-none focus:border-slate-500" type="email" id="signup_email"
-                                name="signup_email" placeholder="請輸入信箱">
+                                name="signup_email" placeholder="請輸入信箱" required
+                                oninvalid="this.setCustomValidity('請輸入正確的電子郵件格式')" oninput="this.setCustomValidity('')">
                             <span class="hidden text-red-500 text-sm">信箱格式不正確</span>
                         </div>
                     </div>
@@ -47,7 +49,8 @@
                         <div class="w-full">
                             <input class="w-full p-2 border border-gray-300 rounded-md
                                     focus:outline-none focus:border-slate-500" type="password" id="signup_password"
-                                name="signup_password" placeholder="請輸入密碼">
+                                name="signup_password" placeholder="請輸入密碼" required
+                                oninvalid="this.setCustomValidity('請輸入密碼')" oninput="this.setCustomValidity('')">
                             <span class="hidden text-red-500 text-sm">請輸入密碼</span>
                         </div>
                     </div>
@@ -68,7 +71,8 @@
                         <div class="w-full">
                             <input class="w-full p-2 border border-gray-300 rounded-md
                                                 focus:outline-none focus:border-slate-500" type="email" id="email"
-                                name="email" placeholder="請輸入信箱">
+                                name="email" placeholder="請輸入信箱" required
+                                oninvalid="this.setCustomValidity('請輸入正確的電子郵件格式')" oninput="this.setCustomValidity('')">
                             <span class="hidden text-red-500 text-sm">信箱格式不正確</span>
                         </div>
                     </div>
@@ -77,7 +81,8 @@
                         <div class="w-full">
                             <input class="w-full p-2 border border-gray-300 rounded-md
                                                 focus:outline-none focus:border-slate-500" type="password"
-                                id="password" name="password" placeholder="請輸入密碼">
+                                id="password" name="password" placeholder="請輸入密碼" required
+                                oninvalid="this.setCustomValidity('請輸入密碼')" oninput="this.setCustomValidity('')">
                             <span class="hidden text-red-500 text-sm">請輸入密碼</span>
                         </div>
                     </div>
